@@ -1,0 +1,79 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Test Plot</title>
+	<link rel="stylesheet" href="static/css/style.css" type="text/css">
+	<script src="static/js/bootstrap.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="static/css/bootstrap.css" type="text/css" media="screen" title="master" charset="utf-8">
+    <link rel="stylesheet" href="static/css/bootstrap-responsive.css" type="text/css" media="screen" title="master" charset="utf-8">
+	<script language="javascript" type="text/javascript" src="static/js/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="static/js/jquery.flot.js"></script>
+	
+	<script type="text/javascript">
+	$(function() {
+		// getting data
+		var tps = [ [1, 3], [2, 14.01], [3.5, 3.14] ];
+		// var tps = {{ tps }};
+
+		// plot options
+		var plot = $.plot("#chart_tps", [
+			{ data: tps},
+		], {
+			grid: {
+				hoverable: true
+			}
+		});
+
+		// tooltip magic
+		function showTooltip_tps(x, y, contents) {
+			$("<div id='tooltip'>" + contents + "</div>").css({
+				position: "absolute",
+				display: "none",
+				top: y + 5,
+				left: x + 5,
+				border: "1px solid #fdd",
+				padding: "2px",
+				"background-color": "#fee",
+				opacity: 0.80
+			}).appendTo("body").fadeIn(200);
+		}
+		var previousPoint_tps = null;
+		$("#chart_tps").bind("plothover", function (event, pos, item) {
+			if (item) {
+				if (previousPoint_tps != item.dataIndex) {
+					previousPoint_tps = item.dataIndex;
+					$("#tooltip").remove();
+					var x = item.datapoint[0].toFixed(2),
+					y = item.datapoint[1].toFixed(2);
+					showTooltip_tps(item.pageX, item.pageY,
+					y + " tweets per second");
+				}
+				} else {
+					$("#tooltip").remove();
+					previousPoint = null;            
+				}
+		});
+	});
+	</script>
+</head>
+
+<body>
+	<div id="header">
+		<h2>lytic.al</h2>
+	</div>
+
+	<div id="content">
+		<div class="demo-container">
+			<div id="chart_tps" class="demo-placeholder"></div>
+		</div>
+		<p>Testing interactive chart data with hover over!</p>
+		<p> Testing var: {{ tps }} </p>
+	</div>
+	<div id="footer">
+		Aditya Dalal, Tae-Min Kim, Shu Xu, Felix Yeung
+	</div>
+
+</body>
+</html>
